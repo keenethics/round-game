@@ -1,0 +1,23 @@
+.content-landing {
+  form {
+    max-width: 400px;
+    margin: 0 auto;
+    padding: 50px 15px;
+
+    p {
+      text-align: center;
+      font-size: 12px;
+      color: #8b929b;
+    }
+    a {
+      color: #8b929b;
+
+      &:hover {
+        color: darken(#8b929b, 20%);
+      }
+    }
+    input[type="submit"] {
+      margin: 15px auto 25px;
+    }
+  }
+}
