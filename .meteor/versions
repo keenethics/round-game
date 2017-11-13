@@ -42,6 +42,7 @@ id-map@1.0.9
 livedata@1.0.18
 localstorage@1.2.0
 logging@1.1.19
+mdg:validated-method@1.1.0
 mdg:validation-error@0.5.1
 meteor@1.8.1
 meteor-base@1.2.0
@@ -64,6 +65,7 @@ react-meteor-data@0.2.15
 reactive-var@1.0.11
 reload@1.1.11
 retry@1.0.9
+reywood:publish-composite@1.5.2
 routepolicy@1.0.12
 seba:minifiers-autoprefixer@1.0.1
 service-configuration@1.0.11

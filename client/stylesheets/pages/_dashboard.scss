@@ -1,0 +1,26 @@
+.search-block {
+  overflow: hidden;
+
+  input[type="button"] {
+    float: left;
+  }
+}
+.opponents {
+  float: right;
+  overflow: hidden;
+  height: 40px;
+
+  .opponent {
+    float: left;
+    width: 40px;
+    height: 40px;
+    background: #e6e9ee;
+    border-radius: 20px;
+    margin: 0 0 0 8px;
+
+    &.in-search {
+      background: lighten(#e6e9ee, 5%);
+      box-shadow: 0 0 0 2px #91de90 inset;
+    }
+  }
+}

@@ -23,11 +23,12 @@ input[type="email"] {
     border-color: #91de90;
   }
 }
-input[type="submit"] {
+input[type="submit"],
+input[type="button"] {
   display: block;
   height: 40px;
   border-radius: 20px;
-  padding: 0 20px;
+  padding: 0 20px 1px;
   font-size: 16px;
   background: #91de90;
   color: #fff;
