@@ -24,7 +24,7 @@ Queue.schema = new SimpleSchema({
   },
   createdAt: {
     type: Date,
-    defaultValue: new Date(),
+    autoValue: () => new Date(),
   },
 });
 

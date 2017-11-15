@@ -12,6 +12,9 @@ export const runSearch = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('queue.getInLine', 'Must be logged in to search for opponents');
     }
+    if (Queue.find({ userId: this.userId }).count()) {
+      throw new Meteor.Error('queue.getInLine', 'You can\'t start searching now');
+    }
 
     const userInSearch = { userId: this.userId };
     const opponentsInSearch = Queue.find(
@@ -19,7 +22,7 @@ export const runSearch = new ValidatedMethod({
       { _id: 0, userId: 1 },
     ).map(doc => doc.userId);
 
-    if (opponentsInSearch.length === 3) {
+    if (opponentsInSearch.length === 1) {
       const roomId = nanoid();
 
       userInSearch.status = 'pending';
@@ -29,6 +32,18 @@ export const runSearch = new ValidatedMethod({
     }
 
     Queue.insert(userInSearch);
+  },
+});
+
+export const userReady = new ValidatedMethod({
+  name: 'queue.userReady',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('queue.getInLine', 'Must be logged in for this action');
+    }
+
+    Queue.update({ userId: this.userId }, { $set: { status: 'ready' } });
   },
 });
 

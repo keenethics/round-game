@@ -18,11 +18,12 @@ export default withTracker(() => {
       userId: { $ne: Meteor.userId() },
     }).fetch() : [];
   }
-
-  opponents = isReady ? Queue.find({
-    status: 'search',
-    userId: { $ne: Meteor.userId() },
-  }).fetch() : [];
+  if (user && !user.roomId) {
+    opponents = isReady ? Queue.find({
+      status: 'search',
+      userId: { $ne: Meteor.userId() },
+    }).fetch() : [];
+  }
 
   return {
     isReady,

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import { runSearch, stopSearch } from '/imports/api/queue/actions';
+import { runSearch, userReady, stopSearch } from '/imports/api/queue/actions';
 
 import Layout from '/imports/ui/layout/layout';
 
@@ -22,15 +22,16 @@ export default class Dashboard extends React.Component {
       <Layout name="dashboard">
         <div className="container">
           <div className="block search-block">
-            {user.status === 'search' || (
+            {!!user.status || (
               <input type="button" value="Search opponents" onClick={runSearch} />
             )}
             {user.status === 'search' && (
               <input type="button" value="Cancel search" onClick={stopSearch} />
             )}
-            {user.status === 'search' && (
-              <SearchStatus user={user} opponents={opponents} />
+            {user.status === 'pending' && (
+              <input type="button" value="Start" onClick={userReady} />
             )}
+            <SearchStatus user={user} opponents={opponents} />
           </div>
         </div>
       </Layout>

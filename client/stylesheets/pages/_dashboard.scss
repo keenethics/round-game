@@ -23,9 +23,12 @@
       visibility: hidden;
     }
 
-    &.in-search {
+    &.search {
       background: lighten(#e6e9ee, 5%);
       box-shadow: 0 0 0 2px #91de90 inset;
+    }
+    &.ready {
+      background: #91de90;
     }
   }
 }

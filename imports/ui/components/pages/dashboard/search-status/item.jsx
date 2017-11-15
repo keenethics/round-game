@@ -1,14 +1,25 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import classNames from 'classnames';
 
-const Item = ({ user }) => (
-  <div className={user ? 'user in-search' : 'user'}>
-    {(user && user.status) && [
-      <div key="username" className="username">{user.username}</div>,
-      <div key="status" className="status">{user.status.online ? 'online' : 'offline'}</div>,
-    ]}
-  </div>
-);
+const Item = ({ user }) => {
+  const { information } = user;
+
+  const itemClass = classNames({
+    user: true,
+    search: !!Object.keys(user).length,
+    ready: user && user.status && user.status === 'ready',
+  });
+
+  return (
+    <div className={itemClass}>
+      {(information && information.status) && [
+        <div key="username" className="username">{information.username}</div>,
+        <div key="status" className="status">{information.status.online ? 'online' : 'offline'}</div>,
+      ]}
+    </div>
+  );
+};
 
 Item.propTypes = {
   user: PropTypes.object,

@@ -14,12 +14,12 @@ export default class SearchStatus extends React.Component {
   }
   getOpponents() {
     const { user } = this.props;
-    const opponents = [<Item key={nanoid()} userId={user.userId} />];
+    const opponents = [<Item key={nanoid()} user={user} />];
 
     for (let i = 0; i < 3; i += 1) {
       const opponent = this.props.opponents[i];
 
-      opponents.push(<Item key={nanoid()} userId={opponent && opponent.userId} />);
+      opponents.push(<Item key={nanoid()} user={opponent || null} />);
     }
 
     return opponents;
@@ -28,6 +28,7 @@ export default class SearchStatus extends React.Component {
     const { user, opponents } = this.props;
 
     if (!user || !opponents) return null;
+    if (!user.status) return null;
 
     return (
       <div className="search-status">
