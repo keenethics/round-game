@@ -1,14 +1,8 @@
 /* eslint-disable prefer-arrow-callback */
 
-import { Meteor } from 'meteor/meteor';
 import { publishComposite } from 'meteor/reywood:publish-composite';
-// import { check } from 'meteor/check';
 
 import Queue from '/imports/api/queue/queue';
-
-Meteor.publish('queue.opponents', function publish() {
-  return Queue.find({ status: 'search', userId: { $ne: this.userId } });
-});
 
 publishComposite('queue.searchStatus', {
   find() {
@@ -17,7 +11,11 @@ publishComposite('queue.searchStatus', {
   children: [
     {
       find({ roomId }) {
-        return Queue.find({ roomId });
+        if (roomId) {
+          return Queue.find({ roomId, userId: { $ne: this.userId } });
+        }
+
+        return Queue.find({ status: 'search', userId: { $ne: this.userId } });
       },
     },
   ],

@@ -5,18 +5,23 @@
     float: left;
   }
 }
-.opponents {
+.search-status {
   float: right;
   overflow: hidden;
   height: 40px;
 
-  .opponent {
+  .user {
     float: left;
     width: 40px;
     height: 40px;
     background: #e6e9ee;
     border-radius: 20px;
     margin: 0 0 0 8px;
+
+    .username, .status {
+      display: none;
+      visibility: hidden;
+    }
 
     &.in-search {
       background: lighten(#e6e9ee, 5%);

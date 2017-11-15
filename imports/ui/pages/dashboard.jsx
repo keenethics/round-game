@@ -5,7 +5,7 @@ import { runSearch, stopSearch } from '/imports/api/queue/actions';
 
 import Layout from '/imports/ui/layout/layout';
 
-import Opponents from '/imports/ui/containers/components/pages/dashboard/opponents';
+import SearchStatus from '/imports/ui/components/pages/dashboard/search-status/index';
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -14,7 +14,7 @@ export default class Dashboard extends React.Component {
     this.state = {};
   }
   render() {
-    const { isReady, user } = this.props;
+    const { isReady, user, opponents } = this.props;
 
     if (!isReady) return null;
 
@@ -29,7 +29,7 @@ export default class Dashboard extends React.Component {
               <input type="button" value="Cancel search" onClick={stopSearch} />
             )}
             {user.status === 'search' && (
-              <Opponents />
+              <SearchStatus user={user} opponents={opponents} />
             )}
           </div>
         </div>
@@ -41,8 +41,10 @@ export default class Dashboard extends React.Component {
 Dashboard.propTypes = {
   isReady: PropTypes.bool,
   user: PropTypes.object,
+  opponents: PropTypes.array,
 };
 Dashboard.defaultProps = {
   isReady: false,
   user: {},
+  opponents: {},
 };

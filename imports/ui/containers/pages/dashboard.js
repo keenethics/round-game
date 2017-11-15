@@ -10,18 +10,23 @@ export default withTracker(() => {
   const isReady = statusHandle.ready();
   const user = isReady ? Queue.findOne({ userId: Meteor.userId() }) : {};
 
-  if (user && user.roomId) {
-    const room = isReady ? Queue.find({ roomId: user.roomId }).fetch() : [];
+  let opponents = [];
 
-    return {
-      isReady,
-      user,
-      room,
-    };
+  if (user && user.roomId) {
+    opponents = isReady ? Queue.find({
+      roomId: user.roomId,
+      userId: { $ne: Meteor.userId() },
+    }).fetch() : [];
   }
+
+  opponents = isReady ? Queue.find({
+    status: 'search',
+    userId: { $ne: Meteor.userId() },
+  }).fetch() : [];
 
   return {
     isReady,
     user,
+    opponents,
   };
 })(Dashboard);
