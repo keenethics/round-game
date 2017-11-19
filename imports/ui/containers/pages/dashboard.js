@@ -1,6 +1,6 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
-import _ from 'lodash';
+import { every } from 'lodash';
 
 import Queue from '/imports/api/queue/queue';
 
@@ -10,7 +10,6 @@ export default withTracker(() => {
   const statusHandle = Meteor.subscribe('queue.searchStatus');
   const isReady = statusHandle.ready();
   const user = isReady ? Queue.findOne({ userId: Meteor.userId() }) : {};
-
 
   let opponents = [];
 
@@ -27,8 +26,7 @@ export default withTracker(() => {
     }).fetch() : [];
   }
 
-  const readyToStart = user.status === 'ready'
-    && opponents.length > 0 && _.every(opponents, ({ status }) => status === 'ready');
+  const readyToStart = user && user.status === 'ready' && every(opponents, ({ status }) => status === 'ready');
 
   return {
     isReady,

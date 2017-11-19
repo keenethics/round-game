@@ -20,12 +20,7 @@ export default class Dashboard extends React.Component {
     } = this.props;
 
     if (!isReady) return null;
-
-    if (readyToStart) {
-      return (
-        <Redirect to={{ pathname: `/rooms/${user.roomId}` }} />
-      );
-    }
+    if (readyToStart) return <Redirect to={{ pathname: `/rooms/${user.roomId}` }} />;
 
     return (
       <Layout name="dashboard">
