@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Redirect } from 'react-router-dom';
 
 import { runSearch, userReady, stopSearch } from '/imports/api/queue/actions';
 
@@ -14,9 +15,17 @@ export default class Dashboard extends React.Component {
     this.state = {};
   }
   render() {
-    const { isReady, user, opponents } = this.props;
+    const {
+      isReady, user, opponents, readyToStart,
+    } = this.props;
 
     if (!isReady) return null;
+
+    if (readyToStart) {
+      return (
+        <Redirect to={{ pathname: `/rooms/${user.roomId}` }} />
+      );
+    }
 
     return (
       <Layout name="dashboard">
@@ -43,9 +52,11 @@ Dashboard.propTypes = {
   isReady: PropTypes.bool,
   user: PropTypes.object,
   opponents: PropTypes.array,
+  readyToStart: PropTypes.bool,
 };
 Dashboard.defaultProps = {
   isReady: false,
   user: {},
   opponents: {},
+  readyToStart: false,
 };

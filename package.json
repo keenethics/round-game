@@ -10,6 +10,7 @@
     "babel-runtime": "^6.26.0",
     "bcrypt": "^1.0.3",
     "classnames": "^2.2.5",
+    "lodash": "^4.17.4",
     "meteor-node-stubs": "^0.3.2",
     "nanoid": "^1.0.1",
     "prop-types": "^15.6.0",
