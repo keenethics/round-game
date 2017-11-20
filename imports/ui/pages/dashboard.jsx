@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Redirect } from 'react-router-dom';
 
-import { runSearch, userReady, stopSearch } from '/imports/api/queue/actions';
+import { startSearch, cancelSearch } from '/imports/api/users/actions';
 
 import Layout from '/imports/ui/layout/layout';
 
@@ -25,18 +25,13 @@ export default class Dashboard extends React.Component {
     return (
       <Layout name="dashboard">
         <div className="container">
-          <div className="block search-block">
-            {!!user.status || (
-              <input type="button" value="Search opponents" onClick={runSearch} />
-            )}
-            {user.status === 'search' && (
-              <input type="button" value="Cancel search" onClick={stopSearch} />
-            )}
-            {user.status === 'pending' && (
-              <input type="button" value="Start" onClick={userReady} />
-            )}
-            <SearchStatus user={user} opponents={opponents} />
-          </div>
+          {user.status === 0 || (
+            <input type="button" value="Search" onClick={startSearch} />
+          )}
+          {user.status === '1' && (
+            <input type="button" value="Cancel" onClick={cancelSearch} />
+          )}
+          <SearchStatus user={user} opponents={opponents} />
         </div>
       </Layout>
     );

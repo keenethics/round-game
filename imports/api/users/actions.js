@@ -8,7 +8,6 @@ export const signin = (user, password) => {
 
   Meteor.loginWithPassword(user, password);
 };
-
 export const signup = (username, email, password) => {
   check(username, String);
   check(email, String);
@@ -16,7 +15,6 @@ export const signup = (username, email, password) => {
 
   Accounts.createUser({ username, email, password });
 };
-
-export const logout = () => {
-  Meteor.logout();
-};
+export const startSearch = () => Meteor.call('user.startSearch');
+export const cancelSearch = () => Meteor.call('user.cancelSearch');
+export const logout = () => Meteor.logout();

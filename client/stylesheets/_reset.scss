@@ -14,6 +14,10 @@ video {
 article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
   display: block;
 }
+html, body {
+  width: 100%;
+  height: 100%;
+}
 body {
   line-height: 1;
   font-family: Arial, 'Helvetica Neue', Helvetica, sans-serif;
