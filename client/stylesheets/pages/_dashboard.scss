@@ -32,3 +32,116 @@
     }
   }
 }
+.dashboard-users {
+  margin: 40px 0;
+  transition: all .3s;
+
+  &:after {
+    content: "";
+    display: table;
+    clear: both;
+  }
+  .dashboard-searching & {
+    margin: 80px 0;
+  }
+  .user, .opponent {
+    .avatar {
+      position: relative;
+      width: 60px;
+      height: 60px;
+      margin: 0 auto;
+      border-radius: 50%;
+      border: 2px solid #fff;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
+
+      img {
+        position: relative;
+        display: block;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        z-index: 2;
+      }
+    }
+    .username {
+      text-align: center;
+      font-size: 14px;
+      color: #626872;
+      margin: 6px 0 0;
+      transition: all .3s;
+
+      .dashboard-searching & {
+        opacity: 0;
+      }
+    }
+  }
+  .opponent {
+    float: right;
+    width: 50%;
+  }
+  .user {
+    .dashboard-game & {
+      float: left;
+      width: 50%;
+    }
+    .avatar {
+      .dashboard-searching & {
+        &:before, &:after {
+          content: '';
+          position: absolute;
+          left: 0;
+          bottom: 0;
+          width: 60px;
+          height: 60px;
+          opacity: 1;
+          background: rgba(112, 118, 246, .1);
+          border: 1px solid #cfcff6;
+          border-radius: 50%;
+          box-sizing: border-box;
+          z-index: 1;
+          opacity: 0;
+        }
+        &:before {
+          animation-name: searching;
+          animation-duration: 2s;
+          animation-iteration-count: infinite;
+        }
+        &:after {
+          animation-name: searching;
+          animation-duration: 2s;
+          animation-delay: 1s;
+          animation-iteration-count: infinite;
+        }
+      }
+    }
+  }
+}
+.dashboard-actions {
+  text-align: center;
+
+  input[type="button"] {
+    margin: 0 auto;
+  }
+}
+@keyframes searching {
+  0% {
+    left: 0;
+    bottom: 0;
+    width: 60px;
+    height: 60px;
+    opacity: 0;
+  }
+  5% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: -70px;
+    bottom: -70px;
+    width: 200px;
+    height: 200px;
+    opacity: 0;
+  }
+}

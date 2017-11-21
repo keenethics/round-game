@@ -1,12 +1,16 @@
+import { Meteor } from 'meteor/meteor';
+
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Redirect } from 'react-router-dom';
+import classNames from 'classnames';
+
+import { statuses } from '/imports/helpers/types';
 
 import { startSearch, cancelSearch } from '/imports/api/users/actions';
 
 import Layout from '/imports/ui/layout/layout';
-
-import SearchStatus from '/imports/ui/components/pages/dashboard/search-status/index';
+import Game from '/imports/ui/containers/components/pages/dashboard/game/index';
+import Users from '/imports/ui/containers/components/pages/dashboard/users';
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -15,23 +19,35 @@ export default class Dashboard extends React.Component {
     this.state = {};
   }
   render() {
-    const {
-      isReady, user, opponents, readyToStart,
-    } = this.props;
+    const { isReady, user, game } = this.props;
 
     if (!isReady) return null;
-    if (readyToStart) return <Redirect to={{ pathname: `/rooms/${user.roomId}` }} />;
+
+    const dashboardClass = classNames({
+      dashboard: true,
+      'dashboard-searching': user.status === statuses.search,
+      'dashboard-game': user.status === statuses.game,
+    });
 
     return (
-      <Layout name="dashboard">
-        <div className="container">
-          {user.status === 0 || (
-            <input type="button" value="Search" onClick={startSearch} />
+      <Layout>
+        <div className={dashboardClass}>
+          <div className="dashboard-header" />
+          <div className="dashboard-content">
+            <Users user={user} game={game} />
+            <div className="dashboard-actions">
+              {user.status === statuses.default && (
+                <input type="button" value="Search" onClick={startSearch} />
+              )}
+              {user.status === statuses.search && (
+                <input type="button" className="red" value="Cancel" onClick={cancelSearch} />
+              )}
+            </div>
+          </div>
+          {user.status === statuses.game && (
+            <Game />
           )}
-          {user.status === '1' && (
-            <input type="button" value="Cancel" onClick={cancelSearch} />
-          )}
-          <SearchStatus user={user} opponents={opponents} />
+          <input type="button" value="Reset" onClick={() => Meteor.call('users.reset')} />
         </div>
       </Layout>
     );
@@ -41,12 +57,10 @@ export default class Dashboard extends React.Component {
 Dashboard.propTypes = {
   isReady: PropTypes.bool,
   user: PropTypes.object,
-  opponents: PropTypes.array,
-  readyToStart: PropTypes.bool,
+  game: PropTypes.object,
 };
 Dashboard.defaultProps = {
   isReady: false,
   user: {},
-  opponents: {},
-  readyToStart: false,
+  game: {},
 };

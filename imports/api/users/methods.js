@@ -1,6 +1,11 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
+import Users from '/imports/api/users';
+import Games from '/imports/api/games';
+
+import { statuses } from '/imports/helpers/types';
+
 export const startSearch = new ValidatedMethod({
   name: 'user.startSearch',
   validate: null,
@@ -12,13 +17,17 @@ export const startSearch = new ValidatedMethod({
       throw new Meteor.Error('user.startSearch', 'You can\'t start searching now');
     }
 
-    const opponent = Meteor.users.findOne({ status: 1 });
+    const opponent = Meteor.users.findOne({ status: statuses.search });
 
     if (opponent) {
-      Meteor.users.update(opponent._id, { $set: { status: 2 } });
-      Meteor.users.update(this.userId, { $set: { status: 2 } });
+      Meteor.users.update(
+        { _id: { $in: [opponent._id, this.userId] } },
+        { $set: { status: statuses.game } },
+        { multi: true },
+      );
+      Games.insert({ users: [opponent._id, this.userId] });
     } else {
-      Meteor.users.update(this.userId, { $set: { status: 1 } });
+      Meteor.users.update(this.userId, { $set: { status: statuses.search } });
     }
   },
 });
@@ -30,10 +39,19 @@ export const cancelSearch = new ValidatedMethod({
     if (!this.userId) {
       throw new Meteor.Error('user.cancelSearch', 'Must be logged in to cancel search');
     }
-    if (Meteor.user().status) {
+    if (Meteor.user().status !== statuses.search) {
       throw new Meteor.Error('user.cancelSearch', 'You can\'t cancel search now');
     }
 
-    Meteor.users.update(this.userId, { $set: { status: 0 } });
+    Meteor.users.update(this.userId, { $set: { status: statuses.default } });
+  },
+});
+
+export const resetUsers = new ValidatedMethod({
+  name: 'users.reset',
+  validate: null,
+  run() {
+    Users.update({}, { $set: { status: statuses.default } }, { multi: true });
+    Games.remove();
   },
 });

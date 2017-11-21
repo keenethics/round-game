@@ -1,24 +1,20 @@
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
-import Users from '/imports/api/users';
 import Games from '/imports/api/games';
 
-import Dashboard from '/imports/ui/pages/dashboard';
+import Game from '/imports/ui/components/pages/dashboard/game/index';
 
 export default withTracker(() => {
-  const userHandle = Meteor.subscribe('users.current');
-  const isReady = userHandle.ready();
-  const user = isReady ? Users.findOne(Meteor.userId()) : {};
-
   const gameHandle = Meteor.subscribe('games.current');
-  const game = gameHandle.ready() ? Games.findOne({
+  const isReady = gameHandle.ready();
+
+  const game = isReady ? Games.findOne({
     users: Meteor.userId(), isFinished: { $ne: true },
   }) : {};
 
   return {
     isReady,
-    user,
     game,
   };
-})(Dashboard);
+})(Game);

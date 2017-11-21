@@ -31,12 +31,26 @@ input[type="button"] {
   padding: 0 26px 1px;
   font-size: 16px;
   background: #91de90;
-  color: #fff;
   border: none;
+  color: #fff;
   outline: none;
   cursor: pointer;
+  transition: all .2s;
 
   &:hover {
     background: darken(#91de90, 10%);
+  }
+  &:active {
+    transform: scale(.95);
+  }
+  &.red {
+    background: #ff7d80;
+
+    &:hover {
+      background: darken(#ff7d80, 10%);
+    }
+    &:active {
+      transform: scale(.95);
+    }
   }
 }
