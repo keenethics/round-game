@@ -5,18 +5,29 @@ const Users = ({ user, opponent }) => (
   <div className="dashboard-users">
     <div className="user">
       <div className="avatar">
-        <img src="/usernamus.jpg" width="60" height="60" alt="avatar" />
+        <img src="/usernamus.jpg" alt="avatar" />
       </div>
       <div className="username">{user.username}</div>
     </div>
-    {opponent && (
-      <div className="opponent">
-        <div className="avatar">
-          <img src="/usernamus.jpg" width="60" height="60" alt="avatar" />
-        </div>
-        <div className="username">{opponent.username}</div>
+    <div className="opponent">
+      {opponent && [
+        <div className="avatar" key="avatar">
+          <img src="/usernamus.jpg" alt="avatar" />
+        </div>,
+        <div className="username" key="username">{opponent.username}</div>,
+      ]}
+    </div>
+    <div className="versus">
+      <div className="round">
+        <span className="point" />
+        <span className="point" />
+        <span className="point win" />
+        <span className="label">Round 1</span>
+        <span className="point lose" />
+        <span className="point" />
+        <span className="point" />
       </div>
-    )}
+    </div>
   </div>
 );
 

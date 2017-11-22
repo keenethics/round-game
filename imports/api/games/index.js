@@ -1,7 +1,7 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-const Games = new Mongo.Collection('game');
+const Games = new Mongo.Collection('games');
 
 Games.deny({
   insert() { return false; },

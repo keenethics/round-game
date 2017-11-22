@@ -52,6 +52,6 @@ export const resetUsers = new ValidatedMethod({
   validate: null,
   run() {
     Users.update({}, { $set: { status: statuses.default } }, { multi: true });
-    Games.remove();
+    Games.remove({});
   },
 });

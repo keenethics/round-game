@@ -1,39 +1,7 @@
-.search-block {
-  overflow: hidden;
-
-  input[type="button"] {
-    float: left;
-  }
-}
-.search-status {
-  float: right;
-  overflow: hidden;
-  height: 40px;
-
-  .user {
-    float: left;
-    width: 40px;
-    height: 40px;
-    background: #e6e9ee;
-    border-radius: 20px;
-    margin: 0 0 0 8px;
-
-    .username, .status {
-      display: none;
-      visibility: hidden;
-    }
-
-    &.search {
-      background: lighten(#e6e9ee, 5%);
-      box-shadow: 0 0 0 2px #91de90 inset;
-    }
-    &.ready {
-      background: #91de90;
-    }
-  }
-}
 .dashboard-users {
+  position: relative;
   margin: 40px 0;
+  height: 90px;
   transition: all .3s;
 
   &:after {
@@ -44,7 +12,14 @@
   .dashboard-searching & {
     margin: 80px 0;
   }
+  .dashboard-game & {
+    margin: 15px 0;
+  }
   .user, .opponent {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+
     .avatar {
       position: relative;
       width: 60px;
@@ -62,12 +37,23 @@
         border-radius: 50%;
         z-index: 2;
       }
+
+      .dashboard-game & {
+        width: 40px;
+        height: 40px;
+
+        img {
+          width: 40px;
+          height: 40px;
+        }
+      }
     }
     .username {
       text-align: center;
-      font-size: 14px;
+      font-size: 12px;
       color: #626872;
       margin: 6px 0 0;
+      z-index: 200;
       transition: all .3s;
 
       .dashboard-searching & {
@@ -76,13 +62,24 @@
     }
   }
   .opponent {
-    float: right;
-    width: 50%;
+    right: 50%;
+    margin-right: -45px;
+    z-index: 100;
+    transition: all .6s;
+
+    .dashboard-game & {
+      margin-right: 0;
+      right: 0;
+    }
   }
   .user {
+    left: 50%;
+    margin-left: -45px;
+    transition: all .6s;
+
     .dashboard-game & {
-      float: left;
-      width: 50%;
+      margin-left: 0;
+      left: 0;
     }
     .avatar {
       .dashboard-searching & {
@@ -115,6 +112,50 @@
       }
     }
   }
+  .versus {
+    position: relative;
+    z-index: 300;
+    text-align: center;
+    padding: 12px 0;
+    opacity: 0;
+
+    .round {
+      display: inline-block;
+      font-size: 12px;
+      color: #5f6066;
+      background: #dee4f8;
+      padding: 4px 6px;
+      border-radius: 10px;
+
+      span {
+        display: inline-block;
+        vertical-align: middle;
+      }
+      .point {
+        width: 4px;
+        height: 4px;
+        margin: 0 2px;
+        background: #fff;
+        border-radius: 2px;
+
+        &.win {
+          background: #91de90;
+        }
+        &.lose {
+          background: #ff7d80;
+        }
+      }
+      .label {
+        margin: 0 4px;
+      }
+    }
+    .dashboard-game & {
+      animation-name: versus;
+      animation-duration: .6s;
+      animation-delay: .3s;
+      animation-fill-mode: both;
+    }
+  }
 }
 .dashboard-actions {
   text-align: center;
@@ -143,5 +184,62 @@
     width: 200px;
     height: 200px;
     opacity: 0;
+  }
+}
+@keyframes versus {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+.table {
+  text-align: center;
+  margin: 0 0 40px;
+  perspective: 800px;
+
+  .user, .opponent {
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+  .card {
+    display: inline-block;
+    width: 80px;
+    height: 100px;
+    background: rgba(0, 0, 0, .05);
+    border-radius: 6px;
+    margin: 10px;
+    transform-style: preserve-3d;
+    transition: transform .2s;
+
+    figure {
+      margin: 0;
+      display: block;
+      position: absolute;
+      width: 80px;
+      height: 100px;
+      background: #91de90 url('/cards/background.png') no-repeat center;
+      background-size: 80px 100px;
+      border-radius: 6px;
+      backface-visibility: hidden;
+      transform: rotateY( 0deg );
+
+      &.back {
+        transform: rotateY( 180deg );
+      }
+    }
+    &.flipped {
+      transform: rotateY( -180deg );
+    }
+  }
+  input[type="button"] {
+    margin: 0 auto;
   }
 }

@@ -11,6 +11,7 @@ import { startSearch, cancelSearch } from '/imports/api/users/actions';
 import Layout from '/imports/ui/layout/layout';
 import Game from '/imports/ui/containers/components/pages/dashboard/game/index';
 import Users from '/imports/ui/containers/components/pages/dashboard/users';
+import Actions from '/imports/ui/components/pages/dashboard/actions';
 
 export default class Dashboard extends React.Component {
   constructor(props) {
@@ -32,17 +33,9 @@ export default class Dashboard extends React.Component {
     return (
       <Layout>
         <div className={dashboardClass}>
-          <div className="dashboard-header" />
           <div className="dashboard-content">
             <Users user={user} game={game} />
-            <div className="dashboard-actions">
-              {user.status === statuses.default && (
-                <input type="button" value="Search" onClick={startSearch} />
-              )}
-              {user.status === statuses.search && (
-                <input type="button" className="red" value="Cancel" onClick={cancelSearch} />
-              )}
-            </div>
+            <Actions user={user} startSearch={startSearch} cancelSearch={cancelSearch} />
           </div>
           {user.status === statuses.game && (
             <Game />
