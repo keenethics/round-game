@@ -6,15 +6,15 @@ import Card from '/imports/ui/components/pages/dashboard/game/card';
 const Game = ({ combination }) => (
   <div className="table">
     <div className="opponent">
-      <Card value={combination[0]} />
-      <Card value={combination[1]} />
-      <Card value={combination[2]} />
+      <Card readOnly />
+      <Card readOnly />
+      <Card readOnly />
     </div>
     <input type="button" value="I'm ready" />
     <div className="user">
-      <Card readOnly />
-      <Card readOnly />
-      <Card readOnly />
+      <Card value={combination[0]} />
+      <Card value={combination[1]} />
+      <Card value={combination[2]} />
     </div>
   </div>
 );

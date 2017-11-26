@@ -18,6 +18,16 @@ export default class Card extends React.Component {
 
     this.flip = this.flip.bind(this);
   }
+  componentWillReceiveProps(nextProps) {
+    const nonSelectedChoices = Games.choices.filter(val => val !== nextProps.value);
+
+    this.setState({
+      front: nextProps.readOnly ? 'background' : nextProps.value,
+      back: nextProps.readOnly ? 'background' : nonSelectedChoices[0],
+      hidden: nextProps.readOnly ? 'background' : nonSelectedChoices[1],
+      readOnly: nextProps.readOnly,
+    });
+  }
   flip () {
     if (this.state.readOnly) return;
     this.setState({
@@ -28,18 +38,18 @@ export default class Card extends React.Component {
     setTimeout(() => this.setState({
       [invisibleSide]: this.state.hidden,
       hidden: this.state[invisibleSide],
-    }), 200);
+    }), 400);
   }
   render() {
-    const { isFlipped } = this.state;
+    const { isFlipped, front, back } = this.state;
 
     return (
       <div className={isFlipped ? 'card flipped' : 'card'} onClick={this.flip} role="presentation">
         <figure className="front">
-          <img src={`/cards/${this.state.front}.png`} width="80" height="100" alt={this.state.front} />
+          <img src={`/cards/${front}.png`} width="80" height="100" alt={front} />
         </figure>
         <figure className="back">
-          <img src={`/cards/${this.state.back}.png`} width="80" height="100" alt={this.state.back} />
+          <img src={`/cards/${back}.png`} width="80" height="100" alt={back} />
         </figure>
       </div>
     );
