@@ -59,5 +59,5 @@ Dashboard.defaultProps = {
   isReady: false,
   user: {},
   game: {},
-  combination: ['rock', 'rock', 'rock'],
+  combination: [],
 };

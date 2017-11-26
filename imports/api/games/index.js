@@ -1,6 +1,8 @@
 import { Mongo } from 'meteor/mongo';
 import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
+import { cards } from '/imports/helpers/types';
+
 const Games = new Mongo.Collection('games');
 
 Games.deny({
@@ -41,11 +43,10 @@ Games.schema = new SimpleSchema({
 
 Games.attachSchema(Games.schema);
 
-Games.choices = ['rock', 'scissors', 'paper'];
 Games.randomCombination = () => [
-  Games.choices[Math.floor(Math.random() * 3)],
-  Games.choices[Math.floor(Math.random() * 3)],
-  Games.choices[Math.floor(Math.random() * 3)],
+  cards[Math.floor(Math.random() * 3)],
+  cards[Math.floor(Math.random() * 3)],
+  cards[Math.floor(Math.random() * 3)],
 ];
 
 export default Games;

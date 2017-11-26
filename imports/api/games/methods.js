@@ -1,60 +1,41 @@
 import { Meteor } from 'meteor/meteor';
 import { ValidatedMethod } from 'meteor/mdg:validated-method';
+import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
-import nanoid from 'nanoid';
+import Games from '/imports/api/games';
+import { cards } from '/imports/helpers/types';
 
-import Queue from '/imports/api/queue/queue';
-
-export const runSearch = new ValidatedMethod({
-  name: 'queue.runSearch',
-  validate: null,
-  run() {
+const flipCard = new ValidatedMethod({
+  name: 'games.flipCard',
+  validate: new SimpleSchema({
+    index: { type: Number },
+  }).validator(),
+  run({ index }) {
     if (!this.userId) {
-      throw new Meteor.Error('queue.getInLine', 'Must be logged in to search for opponents');
-    }
-    if (Queue.find({ userId: this.userId }).count()) {
-      throw new Meteor.Error('queue.getInLine', 'You can\'t start searching now');
+      throw new Meteor.Error('games.flipCard', 'Must be logged in to flip card');
     }
 
-    const userInSearch = { userId: this.userId };
-    const opponentsInSearch = Queue.find(
-      { status: 'search' },
-      { _id: 0, userId: 1 },
-    ).map(doc => doc.userId);
+    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
 
-    if (opponentsInSearch.length === 1) {
-      const roomId = nanoid();
+    if (game && game.currentBids && game.currentBids[this.userId]) {
+      const { currentBids } = game;
+      const currentBid = currentBids[this.userId];
+      const cardIndex = cards.indexOf(currentBid[index]);
 
-      userInSearch.status = 'pending';
-      userInSearch.roomId = roomId;
+      if (cardIndex > -1) {
+        currentBid.splice(index, 1, (cardIndex + 1) > 2 ? cards[0] : cards[cardIndex + 1]);
 
-      Queue.update({ userId: { $in: opponentsInSearch } }, { $set: { status: 'pending', roomId } });
+        currentBids[this.userId] = currentBid;
+
+        Games.update({
+          users: this.userId,
+          isFinished: { $ne: true },
+        }, {
+          $set: { currentBids },
+        });
+      }
     }
-
-    Queue.insert(userInSearch);
   },
 });
 
-export const userReady = new ValidatedMethod({
-  name: 'queue.userReady',
-  validate: null,
-  run() {
-    if (!this.userId) {
-      throw new Meteor.Error('queue.getInLine', 'Must be logged in for this action');
-    }
-
-    Queue.update({ userId: this.userId }, { $set: { status: 'ready' } });
-  },
-});
-
-export const stopSearch = new ValidatedMethod({
-  name: 'queue.stopSearch',
-  validate: null,
-  run() {
-    if (!this.userId) {
-      throw new Meteor.Error('queue.getInLine', 'Must be logged in to stop search');
-    }
-
-    Queue.remove({ userId: this.userId });
-  },
-});
+export default flipCard;

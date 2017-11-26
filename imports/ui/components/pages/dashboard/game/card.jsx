@@ -1,55 +1,43 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import Games from '/imports/api/games';
+
+import flipCard from '/imports/api/games/actions';
 
 export default class Card extends React.Component {
   constructor(props) {
     super(props);
 
-    const nonSelectedChoices = Games.choices.filter(val => val !== props.value);
-
     this.state = {
       isFlipped: false,
-      front: props.readOnly ? 'background' : props.value,
-      back: props.readOnly ? 'background' : nonSelectedChoices[0],
-      hidden: props.readOnly ? 'background' : nonSelectedChoices[1],
-      readOnly: props.readOnly,
+      cardImage: props.value,
     };
-
-    this.flip = this.flip.bind(this);
   }
   componentWillReceiveProps(nextProps) {
-    const nonSelectedChoices = Games.choices.filter(val => val !== nextProps.value);
-
-    this.setState({
-      front: nextProps.readOnly ? 'background' : nextProps.value,
-      back: nextProps.readOnly ? 'background' : nonSelectedChoices[0],
-      hidden: nextProps.readOnly ? 'background' : nonSelectedChoices[1],
-      readOnly: nextProps.readOnly,
-    });
-  }
-  flip () {
-    if (this.state.readOnly) return;
-    this.setState({
-      isFlipped: !this.state.isFlipped,
-    });
-
-    const invisibleSide = this.state.isFlipped ? 'back' : 'front';
-    setTimeout(() => this.setState({
-      [invisibleSide]: this.state.hidden,
-      hidden: this.state[invisibleSide],
-    }), 400);
+    if (nextProps.value !== this.props.value) {
+      this.setState({
+        isFlipped: !this.state.isFlipped,
+        cardImage: nextProps.value,
+      });
+    }
   }
   render() {
-    const { isFlipped, front, back } = this.state;
+    const { index, value } = this.props;
+    const { isFlipped, cardImage } = this.state;
+
+    if (!value) {
+      return (
+        <div className="card">
+          <figure />
+        </div>
+      );
+    }
 
     return (
-      <div className={isFlipped ? 'card flipped' : 'card'} onClick={this.flip} role="presentation">
-        <figure className="front">
-          <img src={`/cards/${front}.png`} width="80" height="100" alt={front} />
-        </figure>
-        <figure className="back">
-          <img src={`/cards/${back}.png`} width="80" height="100" alt={back} />
+      <div className={isFlipped ? 'card flipped' : 'card'} onClick={() => flipCard({ index })} role="presentation">
+        <figure>
+          <img src="/cards/rock.png" className={cardImage === 'rock' ? 'active' : ''} alt="rock" />
+          <img src="/cards/scissors.png" className={cardImage === 'scissors' ? 'active' : ''} alt="scissors" />
+          <img src="/cards/paper.png" className={cardImage === 'paper' ? 'active' : ''} alt="paper" />
         </figure>
       </div>
     );
@@ -57,10 +45,10 @@ export default class Card extends React.Component {
 }
 
 Card.propTypes = {
+  index: PropTypes.number,
   value: PropTypes.string,
-  readOnly: PropTypes.bool,
 };
 Card.defaultProps = {
-  value: 'rock',
-  readOnly: false,
+  index: 0,
+  value: '',
 };
