@@ -21,8 +21,31 @@ Games.schema = new SimpleSchema({
     type: Date,
     autoValue: () => new Date(),
   },
+  currentBids: {
+    type: Object,
+    blackbox: true,
+    optional: true,
+    autoValue() {
+      return this.isSet ? this.value : {
+        [this.field('users').value[0]]: Games.randomCombination(),
+        [this.field('users').value[1]]: Games.randomCombination(),
+      };
+    },
+  },
+  previousBids: {
+    type: Object,
+    blackbox: true,
+    optional: true,
+  },
 });
 
 Games.attachSchema(Games.schema);
+
+Games.choices = ['rock', 'scissors', 'paper'];
+Games.randomCombination = () => [
+  Games.choices[Math.floor(Math.random() * 3)],
+  Games.choices[Math.floor(Math.random() * 3)],
+  Games.choices[Math.floor(Math.random() * 3)],
+];
 
 export default Games;
