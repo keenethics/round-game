@@ -16,9 +16,12 @@ export default withTracker(() => {
     users: Meteor.userId(), isFinished: { $ne: true },
   }) : {};
 
+  const combination = (game && game.currentBids && game.currentBids[user._id]) || [];
+
   return {
     isReady,
     user,
     game,
+    combination,
   };
 })(Dashboard);
