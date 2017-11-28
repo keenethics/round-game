@@ -17,21 +17,22 @@ const flipCard = new ValidatedMethod({
 
     const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
 
-    if (game && game.currentBids && game.currentBids[this.userId]) {
-      const { currentBids } = game;
-      const currentBid = currentBids[this.userId];
-      const cardIndex = cards.indexOf(currentBid[index]);
+    if (game && game.combinations && game.combinations[this.userId]) {
+      const { combinations, actions } = game;
+      const currentCombinations = combinations[this.userId];
+      const cardIndex = cards.indexOf(currentCombinations[index]);
 
       if (cardIndex > -1) {
-        currentBid.splice(index, 1, (cardIndex + 1) > 2 ? cards[0] : cards[cardIndex + 1]);
+        currentCombinations.splice(index, 1, (cardIndex + 1) > 2 ? cards[0] : cards[cardIndex + 1]);
 
-        currentBids[this.userId] = currentBid;
+        combinations[this.userId] = currentCombinations;
+        actions[this.userId] = { timestamp: new Date().getTime(), cardIndex: index };
 
         Games.update({
           users: this.userId,
           isFinished: { $ne: true },
         }, {
-          $set: { currentBids },
+          $set: { combinations, actions },
         });
       }
     }

@@ -249,8 +249,34 @@
     &.flipped {
       transform: rotateY( 360deg );
     }
+    &.rocking {
+      animation-name: rocking;
+      animation-duration: .5s;
+      animation-iteration-count: 1;
+    }
   }
   input[type="button"] {
     margin: 0 auto;
+  }
+}
+@keyframes rocking {
+  0% {
+    transform: rotateY(0deg);
+    box-shadow: none;
+  }
+  20% {
+    transform: rotateY(10deg);
+  }
+  40% {
+    transform: rotateY(-10deg);
+  }
+  60% {
+    transform: rotateY(10deg);
+  }
+  80% {
+    transform: rotateY(-10deg);
+  }
+  100% {
+    transform: rotateY(0deg);
   }
 }

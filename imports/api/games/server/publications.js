@@ -9,10 +9,10 @@ Meteor.publish('games.current', function() {
   return Games.find({ users: this.userId, isFinished: { $ne: true } }, {
     fields: {
       users: 1,
+      [`combinations.${this.userId}`]: 1,
+      actions: 1,
       isFinished: 1,
       createdAt: 1,
-      previousBids: 1,
-      [`currentBids.${this.userId}`]: 1,
     },
   });
 });

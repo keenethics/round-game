@@ -13,15 +13,36 @@ export default withTracker(() => {
 
   const gameHandle = Meteor.subscribe('games.current');
   const game = gameHandle.ready() ? Games.findOne({
-    users: Meteor.userId(), isFinished: { $ne: true },
+    users: Meteor.userId(),
+    isFinished: { $ne: true },
   }) : {};
 
-  const combination = (game && game.currentBids && game.currentBids[user._id]) || [];
+  if (game && game.users && game.combinations && game.actions) {
+    const userIndex = game.users.indexOf(Meteor.userId());
+
+    if (userIndex > -1) {
+      game.users.splice(userIndex, 1);
+
+      const combination = game.combinations[user._id] || [];
+      const actions = game.actions[game.users[0]] || {};
+
+      return {
+        isReady,
+        user,
+        game,
+        combination,
+        actions,
+      };
+    }
+
+    return {
+      isReady,
+      user,
+    };
+  }
 
   return {
     isReady,
     user,
-    game,
-    combination,
   };
 })(Dashboard);

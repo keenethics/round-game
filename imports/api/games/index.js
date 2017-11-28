@@ -15,15 +15,7 @@ Games.schema = new SimpleSchema({
   users: {
     type: [String],
   },
-  isFinished: {
-    type: Boolean,
-    optional: true,
-  },
-  createdAt: {
-    type: Date,
-    autoValue: () => new Date(),
-  },
-  currentBids: {
+  combinations: {
     type: Object,
     blackbox: true,
     optional: true,
@@ -34,10 +26,30 @@ Games.schema = new SimpleSchema({
       };
     },
   },
-  previousBids: {
+  actions: {
     type: Object,
     blackbox: true,
     optional: true,
+    autoValue() {
+      return this.isSet ? this.value : {
+        [this.field('users').value[0]]: {
+          timestamp: null,
+          index: null,
+        },
+        [this.field('users').value[1]]: {
+          timestamp: null,
+          index: null,
+        },
+      };
+    },
+  },
+  isFinished: {
+    type: Boolean,
+    optional: true,
+  },
+  createdAt: {
+    type: Date,
+    autoValue: () => new Date(),
   },
 });
 
