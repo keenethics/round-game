@@ -5,7 +5,7 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import Games from '/imports/api/games';
 import { cards } from '/imports/helpers/types';
 
-const flipCard = new ValidatedMethod({
+export const flipCard = new ValidatedMethod({
   name: 'games.flipCard',
   validate: new SimpleSchema({
     index: { type: Number },
@@ -39,4 +39,20 @@ const flipCard = new ValidatedMethod({
   },
 });
 
-export default flipCard;
+export const openCards = new ValidatedMethod({
+  name: 'games.openCards',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('games.openCards', 'Must be logged in to open cards');
+    }
+
+    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
+
+    if (game && game.waitingUsers && game.waitingUsers.indexOf(this.userId) > -1) {
+      throw new Meteor.Error('games.openCards', 'The user is already on wait');
+    }
+
+    Games.update(game._id, { $push: { waitingUsers: this.userId } });
+  },
+});

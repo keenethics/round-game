@@ -5,6 +5,33 @@ import { cards } from '/imports/helpers/types';
 
 const Games = new Mongo.Collection('games');
 
+const combinationsAutoValue = (context) => {
+  if (context.isInsert) {
+    return {
+      [context.field('users').value[0]]: Games.randomCombination(),
+      [context.field('users').value[1]]: Games.randomCombination(),
+    };
+  }
+
+  return context.value;
+};
+const actionsAutoValue = (context) => {
+  if (context.isInsert) {
+    return {
+      [context.field('users').value[0]]: {
+        timestamp: null,
+        index: null,
+      },
+      [context.field('users').value[1]]: {
+        timestamp: null,
+        index: null,
+      },
+    };
+  }
+
+  return context.value;
+};
+
 Games.deny({
   insert() { return false; },
   update() { return false; },
@@ -19,29 +46,17 @@ Games.schema = new SimpleSchema({
     type: Object,
     blackbox: true,
     optional: true,
-    autoValue() {
-      return this.isSet ? this.value : {
-        [this.field('users').value[0]]: Games.randomCombination(),
-        [this.field('users').value[1]]: Games.randomCombination(),
-      };
-    },
+    autoValue() { return combinationsAutoValue(this); },
   },
   actions: {
     type: Object,
     blackbox: true,
     optional: true,
-    autoValue() {
-      return this.isSet ? this.value : {
-        [this.field('users').value[0]]: {
-          timestamp: null,
-          index: null,
-        },
-        [this.field('users').value[1]]: {
-          timestamp: null,
-          index: null,
-        },
-      };
-    },
+    autoValue() { return actionsAutoValue(this); },
+  },
+  waitingUsers: {
+    type: [String],
+    optional: true,
   },
   isFinished: {
     type: Boolean,

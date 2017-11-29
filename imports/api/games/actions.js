@@ -1,5 +1,4 @@
 import { Meteor } from 'meteor/meteor';
 
-const flipCard = ({ index }) => Meteor.call('games.flipCard', { index });
-
-export default flipCard;
+export const flipCard = ({ index }) => Meteor.call('games.flipCard', { index });
+export const openCards = () => Meteor.call('games.openCards');

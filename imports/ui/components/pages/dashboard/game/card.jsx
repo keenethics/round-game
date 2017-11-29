@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import flipCard from '/imports/api/games/actions';
+import { flipCard } from '/imports/api/games/actions';
 
 export default class Card extends React.Component {
   constructor(props) {

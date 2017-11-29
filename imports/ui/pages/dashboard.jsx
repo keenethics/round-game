@@ -22,6 +22,7 @@ export default class Dashboard extends React.Component {
   render() {
     const {
       isReady,
+      isWaiting,
       user,
       game,
       combination,
@@ -44,7 +45,7 @@ export default class Dashboard extends React.Component {
             <Actions user={user} startSearch={startSearch} cancelSearch={cancelSearch} />
           </div>
           {user.status === statuses.game && (
-            <Game combination={combination} actions={actions} />
+            <Game combination={combination} actions={actions} isWaiting={isWaiting} />
           )}
           <input type="button" value="Reset" onClick={() => Meteor.call('users.reset')} />
         </div>
@@ -55,6 +56,7 @@ export default class Dashboard extends React.Component {
 
 Dashboard.propTypes = {
   isReady: PropTypes.bool,
+  isWaiting: PropTypes.bool,
   user: PropTypes.object,
   game: PropTypes.object,
   combination: PropTypes.array,
@@ -62,6 +64,7 @@ Dashboard.propTypes = {
 };
 Dashboard.defaultProps = {
   isReady: false,
+  isWaiting: false,
   user: {},
   game: {},
   combination: [],

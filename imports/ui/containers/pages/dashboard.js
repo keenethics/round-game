@@ -28,6 +28,7 @@ export default withTracker(() => {
 
       return {
         isReady,
+        isWaiting: game.waitingUsers && game.waitingUsers.indexOf(Meteor.userId()) > -1,
         user,
         game,
         combination,

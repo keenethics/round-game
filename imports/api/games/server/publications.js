@@ -11,6 +11,7 @@ Meteor.publish('games.current', function() {
       users: 1,
       [`combinations.${this.userId}`]: 1,
       actions: 1,
+      waitingUsers: 1,
       isFinished: 1,
       createdAt: 1,
     },
