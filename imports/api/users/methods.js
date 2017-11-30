@@ -20,14 +20,14 @@ export const startSearch = new ValidatedMethod({
     const opponent = Meteor.users.findOne({ status: statuses.search });
 
     if (opponent) {
-      Meteor.users.update(
+      Users.update(
         { _id: { $in: [opponent._id, this.userId] } },
         { $set: { status: statuses.game } },
         { multi: true },
       );
       Games.insert({ users: [opponent._id, this.userId] });
     } else {
-      Meteor.users.update(this.userId, { $set: { status: statuses.search } });
+      Users.update(this.userId, { $set: { status: statuses.search } });
     }
   },
 });
@@ -43,7 +43,7 @@ export const cancelSearch = new ValidatedMethod({
       throw new Meteor.Error('user.cancelSearch', 'You can\'t cancel search now');
     }
 
-    Meteor.users.update(this.userId, { $set: { status: statuses.default } });
+    Users.update(this.userId, { $set: { status: statuses.default } });
   },
 });
 

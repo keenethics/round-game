@@ -4,10 +4,11 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 
 import { groupBy } from 'lodash';
 
+import Users from '/imports/api/users';
 import Games from '/imports/api/games';
 import History from '/imports/api/history';
 
-import { cards } from '/imports/helpers/types';
+import { statuses, cards } from '/imports/helpers/types';
 import compare from '/imports/helpers/compare';
 
 export const flipCard = new ValidatedMethod({
@@ -125,6 +126,23 @@ export const openCards = new ValidatedMethod({
       history.rewards = rewards;
 
       History.insert(history);
+    }
+  },
+});
+
+export const endGame = new ValidatedMethod({
+  name: 'games.endGame',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('games.openCards', 'Must be logged in to end game');
+    }
+
+    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
+
+    if (game && game.combinationsOpened) {
+      Games.update({ users: this.userId }, { $set: { isFinished: true } });
+      Users.update(this.userId, { $set: { status: statuses.default } });
     }
   },
 });

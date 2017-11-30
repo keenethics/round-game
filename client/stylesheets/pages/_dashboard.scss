@@ -276,3 +276,53 @@
     transform: rotateY(0deg);
   }
 }
+@keyframes result {
+  0% {
+    opacity: 0;
+    top: -400px;
+  }
+  10% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 1;
+    top: -84px;
+  }
+}
+.result {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  margin-left: -140px;
+  width: 200px;
+  padding: 20px 40px 10px;
+  background: #fff;
+  border-radius: 20px;
+  text-align: center;
+  opacity: 0;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .1);
+  animation-name: result;
+  animation-duration: .5s;
+  animation-delay: .5s;
+  animation-fill-mode: both;
+  z-index: 9999;
+
+  h2 {
+    color: #aaa;
+    font-size: 18px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 0 0 4px;
+
+    &.winner {
+      color: #fed571;
+    }
+    &.loser {
+      color: #e20c30;
+    }
+  }
+  p {
+    color: #a1a1a1;
+    font-size: 14px;
+  }
+}
