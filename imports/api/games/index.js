@@ -48,6 +48,11 @@ Games.schema = new SimpleSchema({
     optional: true,
     autoValue() { return combinationsAutoValue(this); },
   },
+  combinationsOpened: {
+    type: Object,
+    blackbox: true,
+    optional: true,
+  },
   actions: {
     type: Object,
     blackbox: true,

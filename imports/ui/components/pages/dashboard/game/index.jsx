@@ -10,16 +10,21 @@ export default class Game extends React.Component {
   constructor(props) {
     super(props);
 
-    this.state = {};
+    this.state = { opponentsCombination: props.opponentsCombination };
+  }
+  componentWillReceiveProps(nextProps) {
+    this.setState({ opponentsCombination: nextProps.opponentsCombination });
   }
   render() {
-    const { combination, actions, isWaiting } = this.props;
+    const {
+      combination, actions, isWaiting,
+    } = this.props;
 
     if (!combination.length) return null;
 
     return (
       <div className="table">
-        <OpponentCards actions={actions} />
+        <OpponentCards combination={this.state.opponentsCombination} actions={actions} />
         {isWaiting || <input type="button" value="I'm ready" onClick={openCards} />}
         <div className="user">
           {combination.map((value, index) => {
@@ -36,10 +41,12 @@ export default class Game extends React.Component {
 Game.propTypes = {
   isWaiting: PropTypes.bool,
   combination: PropTypes.array,
+  opponentsCombination: PropTypes.array,
   actions: PropTypes.object,
 };
 Game.defaultProps = {
   isWaiting: false,
   combination: [],
+  opponentsCombination: [],
   actions: {},
 };

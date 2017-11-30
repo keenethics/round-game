@@ -10,6 +10,7 @@ Meteor.publish('games.current', function() {
     fields: {
       users: 1,
       [`combinations.${this.userId}`]: 1,
+      combinationsOpened: 1,
       actions: 1,
       waitingUsers: 1,
       isFinished: 1,
