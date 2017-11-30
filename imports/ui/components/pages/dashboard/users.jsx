@@ -1,7 +1,11 @@
+import { Meteor } from 'meteor/meteor';
+
 import React from 'react';
 import PropTypes from 'prop-types';
+import { reverse } from 'lodash';
+import nanoid from 'nanoid';
 
-const Users = ({ user, opponent }) => (
+const Users = ({ user, opponent, history }) => (
   <div className="dashboard-users">
     <div className="user">
       <div className="avatar">
@@ -19,13 +23,29 @@ const Users = ({ user, opponent }) => (
     </div>
     <div className="versus">
       <div className="round">
-        <span className="point" />
-        <span className="point" />
-        <span className="point win" />
+        {history.winners && history.winners.map((w) => {
+          if (w && w === Meteor.userId()) return <span key={nanoid()} className="point win" />;
+          if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point lose" />;
+
+          return <span key={nanoid()} className="point" />;
+        })}
+        {history.winners ? '' : [
+          <span key={nanoid()} className="point" />,
+          <span key={nanoid()} className="point" />,
+          <span key={nanoid()} className="point" />,
+        ]}
         <span className="label">vs</span>
-        <span className="point lose" />
-        <span className="point" />
-        <span className="point" />
+        {history.winners && reverse(history.winners).map((w) => {
+          if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point win" />;
+          if (w && w === Meteor.userId()) return <span key={nanoid()} className="point lose" />;
+
+          return <span key={nanoid()} className="point" />;
+        })}
+        {history.winners ? '' : [
+          <span key={nanoid()} className="point" />,
+          <span key={nanoid()} className="point" />,
+          <span key={nanoid()} className="point" />,
+        ]}
       </div>
     </div>
   </div>
@@ -34,10 +54,12 @@ const Users = ({ user, opponent }) => (
 Users.propTypes = {
   user: PropTypes.object,
   opponent: PropTypes.object,
+  history: PropTypes.object,
 };
 Users.defaultProps = {
   user: {},
   opponent: null,
+  history: {},
 };
 
 export default Users;

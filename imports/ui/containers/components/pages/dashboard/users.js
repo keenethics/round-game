@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 
 import Users from '/imports/api/users';
+import History from '/imports/api/history';
 
 import UsersComponent from '/imports/ui/components/pages/dashboard/users';
 
@@ -19,9 +20,13 @@ export default withTracker(({ user, game }) => {
 
       const opponent = Users.findOne(users[0]);
 
+      const historyHandle = Meteor.subscribe('history.byGameId', game._id);
+      const history = historyHandle.ready() ? History.findOne({ gameId: game._id }) : {};
+
       return {
         isReady,
         opponent,
+        history,
       };
     }
 
