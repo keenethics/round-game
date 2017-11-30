@@ -17,6 +17,10 @@ export const flipCard = new ValidatedMethod({
 
     const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
 
+    if (game && game.waitingUsers && game.waitingUsers.includes(this.userId)) {
+      throw new Meteor.Error('games.flipCard', 'User can\'t flip card now');
+    }
+
     if (game && game.combinations && game.combinations[this.userId]) {
       const { combinations, actions } = game;
       const currentCombinations = combinations[this.userId];

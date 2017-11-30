@@ -17,7 +17,9 @@ export default class Game extends React.Component {
   }
   render() {
     const {
-      combination, actions, isWaiting,
+      combination,
+      actions,
+      isWaiting,
     } = this.props;
 
     if (!combination.length) return null;
@@ -26,11 +28,12 @@ export default class Game extends React.Component {
       <div className="table">
         <OpponentCards combination={this.state.opponentsCombination} actions={actions} />
         {isWaiting || <input type="button" value="I'm ready" onClick={openCards} />}
+        {isWaiting && <input type="button" value="Waiting..." disabled />}
         <div className="user">
           {combination.map((value, index) => {
             const key = `card${index}`;
 
-            return <Card key={key} index={index} value={value} />;
+            return <Card key={key} index={index} value={value} isWaiting />;
           })}
         </div>
       </div>
