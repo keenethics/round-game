@@ -14,6 +14,7 @@ export default class OpponentCards extends React.Component {
   }
   componentWillReceiveProps(nextProps) {
     this.setState({ combination: nextProps.combination });
+
     if (nextProps.actions.timestamp !== this.props.actions.timestamp) {
       this.setState({
         flippedCardIndex: nextProps.actions.cardIndex,
@@ -21,14 +22,19 @@ export default class OpponentCards extends React.Component {
     }
   }
   render() {
-    const { flippedCardIndex } = this.state;
+    const { flippedCardIndex, combination } = this.state;
     const { actions } = this.props;
 
     return (
       <div className="opponent">
-        <Card key={`${actions.timestamp}0`} animate={flippedCardIndex === 0} value={this.state.combination[0]} />
-        <Card key={`${actions.timestamp}1`} animate={flippedCardIndex === 1} value={this.state.combination[1]} />
-        <Card key={`${actions.timestamp}2`} animate={flippedCardIndex === 2} value={this.state.combination[2]} />
+        {[0, 1, 2].map(i => (
+          <Card
+            key={`${actions.timestamp}${i}`}
+            animate={flippedCardIndex === i}
+            value={combination[i]}
+            isOpponentSide
+          />
+        ))}
       </div>
     );
   }

@@ -40,7 +40,7 @@ export default class Card extends React.Component {
     });
   }
   render() {
-    const { index, value } = this.props;
+    const { index, value, isOpponentSide } = this.props;
     const { isFlipped, cardImage, rocking } = this.state;
 
     if (!value) {
@@ -52,7 +52,11 @@ export default class Card extends React.Component {
     }
 
     return (
-      <div className={isFlipped ? 'card flipped' : 'card'} onClick={() => flipCard({ index })} role="presentation">
+      <div
+        className={isFlipped ? 'card flipped' : 'card'}
+        onClick={() => isOpponentSide || flipCard({ index })}
+        role="presentation"
+      >
         <figure>
           <img src="/cards/rock.png" className={cardImage === 'rock' ? 'active' : ''} alt="rock" />
           <img src="/cards/scissors.png" className={cardImage === 'scissors' ? 'active' : ''} alt="scissors" />
@@ -67,9 +71,11 @@ Card.propTypes = {
   index: PropTypes.number,
   value: PropTypes.string,
   animate: PropTypes.bool,
+  isOpponentSide: PropTypes.bool,
 };
 Card.defaultProps = {
   index: 0,
   value: '',
   animate: false,
+  isOpponentSide: false,
 };

@@ -13,12 +13,19 @@ export default withTracker(() => {
     users: Meteor.userId(), isFinished: { $ne: true },
   }) : {};
 
-  const opponentId = game.users && game.users.find(id => id !== Meteor.userId());
-  const opponentsCombination = ((game && game.combinationsOpened) || {})[opponentId];
+  if (game && game.users) {
+    const opponentId = game.users && game.users.find(id => id !== Meteor.userId());
+    const opponentsCombination = ((game && game.combinationsOpened) || {})[opponentId];
+
+    return {
+      isReady,
+      game,
+      opponentsCombination,
+    };
+  }
 
   return {
     isReady,
     game,
-    opponentsCombination,
   };
 })(Game);
