@@ -5,6 +5,8 @@ import { SimpleSchema } from 'meteor/aldeed:simple-schema';
 import { groupBy } from 'lodash';
 
 import Games from '/imports/api/games';
+import History from '/imports/api/history';
+
 import { cards } from '/imports/helpers/types';
 import compare from '/imports/helpers/compare';
 
@@ -101,12 +103,28 @@ export const openCards = new ValidatedMethod({
       const victoriesOfFirstPlayer = r[ids[0]] && r[ids[0]].length ? r[ids[0]].length : 0;
       const victoriesOfSecondPlayer = r[ids[1]] && r[ids[1]].length ? r[ids[1]].length : 0;
 
+      const history = {
+        gameId: game._id,
+        winnerId: null,
+        winners,
+        combinations: game.combinations,
+        rewards: {},
+      };
+
       if (victoriesOfFirstPlayer > victoriesOfSecondPlayer) {
-        rewards[ids[0]] += victoriesOfFirstPlayer === 3 ? 15 : 10;
+        const winnerId = ids[0];
+        history.winnerId = winnerId;
+        rewards[winnerId] += victoriesOfFirstPlayer === 3 ? 15 : 10;
       }
       if (victoriesOfSecondPlayer > victoriesOfFirstPlayer) {
-        rewards[ids[1]] += victoriesOfSecondPlayer === 3 ? 15 : 10;
+        const winnerId = ids[1];
+        history.winnerId = winnerId;
+        rewards[winnerId] += victoriesOfSecondPlayer === 3 ? 15 : 10;
       }
+
+      history.rewards = rewards;
+
+      History.insert(history);
     }
   },
 });
