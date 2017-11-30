@@ -49,10 +49,19 @@ export const openCards = new ValidatedMethod({
 
     const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
 
-    if (game && game.waitingUsers && game.waitingUsers.indexOf(this.userId) > -1) {
+    if (!game) {
+      throw new Meteor.Error('games.openCards', 'Couldn\'t find current game');
+    }
+
+    if ((game.waitingUsers || []).includes(this.userId)) {
       throw new Meteor.Error('games.openCards', 'The user is already on wait');
     }
 
-    Games.update(game._id, { $push: { waitingUsers: this.userId } });
+    const opponentReady = (game.waitingUsers || []).length > 0;
+
+    Games.update(game._id, {
+      $push: { waitingUsers: this.userId },
+      $set: { combinationsOpened: opponentReady ? game.combinations : {} },
+    });
   },
 });
