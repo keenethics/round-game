@@ -10,6 +10,7 @@ const Users = ({ user, opponent, history }) => (
     <div className="user">
       <div className="avatar">
         {user.username.charAt(0)}
+        <span>{user.points || 0}</span>
       </div>
       <div className="username">{user.username}</div>
     </div>

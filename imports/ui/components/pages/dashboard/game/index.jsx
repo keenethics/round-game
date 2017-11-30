@@ -42,14 +42,13 @@ export default class Game extends React.Component {
         </div>
         {history.gameId ? (
           <div className="result">
-            {!!history.winnerId || (
-              <h2>In a draw</h2>
-            )}
+            {!history.winnerId ? <h2>In a draw</h2> : null}
             {history.winnerId && history.winnerId === Meteor.userId() ? (
               <h2 className="winner">Winner</h2>
-            ) : (
+            ) : null}
+            {history.winnerId && history.winnerId !== Meteor.userId() ? (
               <h2 className="looser">Looser</h2>
-            )}
+            ) : null}
             <p>Your reward: {history.rewards[Meteor.userId()]} points</p>
           </div>
         ) : null}

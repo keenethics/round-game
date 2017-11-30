@@ -14,7 +14,7 @@ export default withTracker(() => {
   const gameHandle = Meteor.subscribe('games.current');
   const game = gameHandle.ready() ? Games.findOne({
     users: Meteor.userId(),
-    isFinished: { $ne: true },
+    [`isFinished.${this.userId}`]: { $ne: true },
   }) : {};
 
   if (game && game.users && game.combinations && game.actions) {

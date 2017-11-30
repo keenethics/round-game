@@ -47,7 +47,17 @@ export default class Dashboard extends React.Component {
           {user.status === statuses.game && (
             <Game combination={combination} actions={actions} isWaiting={isWaiting} />
           )}
-          <input type="button" value="Reset" onClick={() => Meteor.call('users.reset')} />
+          {Meteor.isDevelopment && (
+            <div className="dashboard-development" style={{ margin: '20px 0' }}>
+              <input
+                type="button"
+                className="red"
+                value="Reset all"
+                onClick={() => Meteor.call('users.resetAll')}
+                style={{ margin: '0 auto' }}
+              />
+            </div>
+          )}
         </div>
       </Layout>
     );

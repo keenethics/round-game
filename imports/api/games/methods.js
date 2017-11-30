@@ -21,7 +21,7 @@ export const flipCard = new ValidatedMethod({
       throw new Meteor.Error('games.flipCard', 'Must be logged in to flip card');
     }
 
-    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
+    const game = Games.findOne({ users: this.userId, [`isFinished.${this.userId}`]: { $ne: true } });
 
     if (game && game.waitingUsers && game.waitingUsers.includes(this.userId)) {
       throw new Meteor.Error('games.flipCard', 'User can\'t flip card now');
@@ -40,7 +40,7 @@ export const flipCard = new ValidatedMethod({
 
         Games.update({
           users: this.userId,
-          isFinished: { $ne: true },
+          [`isFinished.${this.userId}`]: { $ne: true },
         }, {
           $set: { combinations, actions },
         });
@@ -57,7 +57,7 @@ export const openCards = new ValidatedMethod({
       throw new Meteor.Error('games.openCards', 'Must be logged in to open cards');
     }
 
-    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
+    const game = Games.findOne({ users: this.userId, [`isFinished.${this.userId}`]: { $ne: true } });
 
     if (!game) {
       throw new Meteor.Error('games.openCards', 'Couldn\'t find current game');
@@ -125,6 +125,9 @@ export const openCards = new ValidatedMethod({
 
       history.rewards = rewards;
 
+      Users.update(ids[0], { $inc: { points: rewards[ids[0]] } });
+      Users.update(ids[1], { $inc: { points: rewards[ids[1]] } });
+
       History.insert(history);
     }
   },
@@ -138,10 +141,14 @@ export const endGame = new ValidatedMethod({
       throw new Meteor.Error('games.openCards', 'Must be logged in to end game');
     }
 
-    const game = Games.findOne({ users: this.userId, isFinished: { $ne: true } });
+    const game = Games.findOne({ users: this.userId, [`isFinished.${this.userId}`]: { $ne: true } });
 
     if (game && game.combinationsOpened) {
-      Games.update({ users: this.userId }, { $set: { isFinished: true } });
+      Games.update(
+        { users: this.userId },
+        { $set: { [`isFinished.${this.userId}`]: true } },
+        { multi: true },
+      );
       Users.update(this.userId, { $set: { status: statuses.default } });
     }
   },

@@ -32,6 +32,17 @@ const actionsAutoValue = (context) => {
   return context.value;
 };
 
+const isFinishedAutoValue = (context) => {
+  if (context.isInsert) {
+    return {
+      [context.field('users').value[0]]: false,
+      [context.field('users').value[1]]: false,
+    };
+  }
+
+  return context.value;
+};
+
 Games.deny({
   insert() { return false; },
   update() { return false; },
@@ -64,8 +75,10 @@ Games.schema = new SimpleSchema({
     optional: true,
   },
   isFinished: {
-    type: Boolean,
+    type: Object,
+    blackbox: true,
     optional: true,
+    autoValue() { return isFinishedAutoValue(this); },
   },
   createdAt: {
     type: Date,

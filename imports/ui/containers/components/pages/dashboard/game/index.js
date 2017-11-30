@@ -11,7 +11,7 @@ export default withTracker(() => {
   const isReady = gameHandle.ready();
 
   const game = isReady ? Games.findOne({
-    users: Meteor.userId(), isFinished: { $ne: true },
+    users: Meteor.userId(), [`isFinished.${this.userId}`]: { $ne: true },
   }) : {};
 
   if (game && game.users) {

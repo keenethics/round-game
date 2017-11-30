@@ -47,11 +47,16 @@ export const cancelSearch = new ValidatedMethod({
   },
 });
 
-export const resetUsers = new ValidatedMethod({
-  name: 'users.reset',
+export const resetAll = new ValidatedMethod({
+  name: 'users.resetAll',
   validate: null,
   run() {
+    if (Meteor.isProduction) {
+      throw new Meteor.Error('user.cancelSearch', 'You can\'t call this method now');
+    }
+
     Users.update({}, { $set: { status: statuses.default } }, { multi: true });
     Games.remove({});
+    History.remove({});
   },
 });

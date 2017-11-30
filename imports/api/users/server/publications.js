@@ -8,6 +8,7 @@ Meteor.publish('users.current', function() {
     fields: {
       username: 1,
       status: 1,
+      points: 1,
     },
   });
 });
@@ -19,6 +20,7 @@ Meteor.publish('users.byId', function(userId) {
     fields: {
       username: 1,
       status: 1,
+      points: 1,
     },
   });
 });
