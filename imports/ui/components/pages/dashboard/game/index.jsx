@@ -33,7 +33,7 @@ export default class Game extends React.Component {
           {combination.map((value, index) => {
             const key = `card${index}`;
 
-            return <Card key={key} index={index} value={value} isWaiting />;
+            return <Card key={key} index={index} value={value} isWaiting={isWaiting} />;
           })}
         </div>
       </div>
