@@ -31,13 +31,19 @@ const actionsAutoValue = (context) => {
 
   return context.value;
 };
-
 const isFinishedAutoValue = (context) => {
   if (context.isInsert) {
     return {
       [context.field('users').value[0]]: false,
       [context.field('users').value[1]]: false,
     };
+  }
+
+  return context.value;
+};
+const createdAtAutoValue = (context) => {
+  if (context.isInsert) {
+    return new Date();
   }
 
   return context.value;
@@ -82,7 +88,7 @@ Games.schema = new SimpleSchema({
   },
   createdAt: {
     type: Date,
-    autoValue: () => new Date(),
+    autoValue() { return createdAtAutoValue(this); },
   },
 });
 

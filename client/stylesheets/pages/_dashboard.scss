@@ -91,6 +91,7 @@
   .user {
     left: 50%;
     margin-left: -45px;
+    z-index: 100;
     transition: all .6s;
 
     .dashboard-game & {
@@ -215,9 +216,11 @@
   }
 }
 .table {
+  position: relative;
   text-align: center;
   margin: 0 0 40px;
   perspective: 800px;
+  z-index: 200;
 
   .user, .opponent {
     &:after {
@@ -345,5 +348,32 @@
   p {
     color: #a1a1a1;
     font-size: 14px;
+  }
+}
+.progress {
+  position: relative;
+  width: 150px;
+  height: 40px;
+  margin: 0 auto;
+  border-radius: 20px;
+  background: darken(#91de90, 10%);
+  overflow: hidden;
+
+  input[type="button"] {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 150px;
+    background: none;
+    z-index: 100;
+  }
+  .scale {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 40px;
+    border-radius: 0 20px 20px 0;
+    background: #91de90;
+    transition: all .4s;
   }
 }

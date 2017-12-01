@@ -25,7 +25,17 @@ export const startSearch = new ValidatedMethod({
         { $set: { status: statuses.game } },
         { multi: true },
       );
-      Games.insert({ users: [opponent._id, this.userId] });
+      const gameId = Games.insert({ users: [opponent._id, this.userId] });
+
+      Meteor.setTimeout(() => {
+        const { isFinished } = Games.findOne(gameId);
+        if (!isFinished[opponent._id]) {
+          Meteor.call('games.openCards', { userId: opponent._id });
+        }
+        if (!isFinished[this.userId]) {
+          Meteor.call('games.openCards', { userId: this.userId });
+        }
+      }, 30000);
     } else {
       Users.update(this.userId, { $set: { status: statuses.search } });
     }

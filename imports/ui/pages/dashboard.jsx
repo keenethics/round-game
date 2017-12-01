@@ -45,7 +45,12 @@ export default class Dashboard extends React.Component {
             <Actions user={user} startSearch={startSearch} cancelSearch={cancelSearch} />
           </div>
           {user.status === statuses.game && (
-            <Game combination={combination} actions={actions} isWaiting={isWaiting} />
+            <Game
+              combination={combination}
+              actions={actions}
+              isWaiting={isWaiting}
+              countdown={game && game.createdAt ? game.createdAt : null}
+            />
           )}
           {Meteor.isDevelopment && (
             <div className="dashboard-development" style={{ margin: '20px 0' }}>

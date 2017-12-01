@@ -51,26 +51,30 @@ export const flipCard = new ValidatedMethod({
 
 export const openCards = new ValidatedMethod({
   name: 'games.openCards',
-  validate: null,
-  run() {
-    if (!this.userId) {
+  validate: new SimpleSchema({
+    userId: { type: String, optional: true },
+  }).validator(),
+  run({ userId }) {
+    const currentUserId = userId || this.userId;
+
+    if (!currentUserId) {
       throw new Meteor.Error('games.openCards', 'Must be logged in to open cards');
     }
 
-    const game = Games.findOne({ users: this.userId, [`isFinished.${this.userId}`]: { $ne: true } });
+    const game = Games.findOne({ users: currentUserId, [`isFinished.${currentUserId}`]: { $ne: true } });
 
     if (!game) {
       throw new Meteor.Error('games.openCards', 'Couldn\'t find current game');
     }
 
-    if ((game.waitingUsers || []).includes(this.userId)) {
+    if ((game.waitingUsers || []).includes(currentUserId) && !userId) {
       throw new Meteor.Error('games.openCards', 'The user is already on wait');
     }
 
     const opponentReady = (game.waitingUsers || []).length > 0;
 
     Games.update(game._id, {
-      $push: { waitingUsers: this.userId },
+      $push: { waitingUsers: currentUserId },
       $set: { combinationsOpened: opponentReady ? game.combinations : {} },
     });
 
