@@ -3,8 +3,36 @@ import { ValidatedMethod } from 'meteor/mdg:validated-method';
 
 import Users from '/imports/api/users';
 import Games from '/imports/api/games';
+import History from '/imports/api/history';
 
 import { statuses } from '/imports/helpers/types';
+
+const setOpponent = (context, opponent) => {
+  const isBot = opponent.username === 'bot';
+
+  Users.update(
+    { _id: { $in: [opponent._id, context.userId] } },
+    { $set: { status: statuses.game } },
+    { multi: true },
+  );
+  const gameId = Games.insert({ users: [opponent._id, context.userId] });
+
+  if (isBot) {
+    Meteor.call('games.openCards', { userId: opponent._id });
+    Games.update(gameId, { $set: { [`isFinished.${opponent._id}`]: true } });
+  }
+
+  Meteor.setTimeout(() => {
+    const { isFinished } = Games.findOne(gameId);
+
+    if (!isFinished[opponent._id]) {
+      Meteor.call('games.openCards', { userId: opponent._id });
+    }
+    if (!isFinished[context.userId]) {
+      Meteor.call('games.openCards', { userId: context.userId });
+    }
+  }, 30000);
+};
 
 export const startSearch = new ValidatedMethod({
   name: 'user.startSearch',
@@ -17,25 +45,20 @@ export const startSearch = new ValidatedMethod({
       throw new Meteor.Error('user.startSearch', 'You can\'t start searching now');
     }
 
-    const opponent = Meteor.users.findOne({ status: statuses.search });
+    let opponent = Users.findOne({ status: statuses.search });
+
+    Meteor.setTimeout(() => {
+      const game = Games.findOne({ users: this.userId, [`isFinished.${this.userId}`]: { $ne: true } });
+
+      if (!game) {
+        opponent = Users.findOne({ username: 'bot' });
+
+        setOpponent(this, opponent);
+      }
+    }, 10000);
 
     if (opponent) {
-      Users.update(
-        { _id: { $in: [opponent._id, this.userId] } },
-        { $set: { status: statuses.game } },
-        { multi: true },
-      );
-      const gameId = Games.insert({ users: [opponent._id, this.userId] });
-
-      Meteor.setTimeout(() => {
-        const { isFinished } = Games.findOne(gameId);
-        if (!isFinished[opponent._id]) {
-          Meteor.call('games.openCards', { userId: opponent._id });
-        }
-        if (!isFinished[this.userId]) {
-          Meteor.call('games.openCards', { userId: this.userId });
-        }
-      }, 30000);
+      setOpponent(this, opponent);
     } else {
       Users.update(this.userId, { $set: { status: statuses.search } });
     }

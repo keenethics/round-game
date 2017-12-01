@@ -44,14 +44,16 @@ export default class Dashboard extends React.Component {
             <Users user={user} game={game} />
             <Actions user={user} startSearch={startSearch} cancelSearch={cancelSearch} />
           </div>
-          {user.status === statuses.game && (
+          {user.status === statuses.game && [
             <Game
+              key="game"
               combination={combination}
               actions={actions}
               isWaiting={isWaiting}
               countdown={game && game.createdAt ? game.createdAt : null}
-            />
-          )}
+            />,
+            <p key="tips" className="tips">Click on the card to change it</p>,
+          ]}
           {Meteor.isDevelopment && (
             <div className="dashboard-development" style={{ margin: '20px 0' }}>
               <input
