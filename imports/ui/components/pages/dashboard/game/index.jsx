@@ -2,6 +2,7 @@ import { Meteor } from 'meteor/meteor';
 
 import React from 'react';
 import PropTypes from 'prop-types';
+import nanoid from 'nanoid';
 
 import { openCards, endGame } from '/imports/api/games/actions';
 
@@ -67,7 +68,22 @@ export default class Game extends React.Component {
             disabled
           />
         )}
-        {!!history.gameId && <input type="button" className="red" value="Close" onClick={endGame} />}
+        {(history.winners && history.winners.length) && (
+          <div className="cards-result">
+            <div className="cards-result-content">
+              {history.winners.map((w) => {
+                if (w && w === Meteor.userId()) {
+                  return <span key={nanoid()} className="card-result win">+5</span>;
+                }
+                if (w && w !== Meteor.userId()) {
+                  return <span key={nanoid()} className="card-result lose" />;
+                }
+
+                return <span key={nanoid()} className="card-result" />;
+              })}
+            </div>
+          </div>
+        )}
         <div className="user">
           {combination.map((value, index) => {
             const key = `card${index}`;
@@ -85,6 +101,7 @@ export default class Game extends React.Component {
               <h2 className="looser">Looser</h2>
             ) : null}
             <p>Your reward: {history.rewards[Meteor.userId()]} points</p>
+            {!!history.gameId && <input type="button" className="red" value="Close" onClick={endGame} />}
           </div>
         ) : null}
       </div>
