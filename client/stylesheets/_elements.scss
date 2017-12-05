@@ -58,3 +58,50 @@ input[type="button"] {
     color: #fff;
   }
 }
+.close-modal {
+  position: absolute;
+  font-size: 32px;
+  border: none;
+  background: none;
+  color: #444;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  top: 25px;
+  right: 25px;
+  min-width: auto;
+
+  &:hover {
+    color: #000;
+  }
+}
+.modal {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: rgba(255, 255, 255, .96);
+
+}
+.modal-container {
+  max-width: 680px;
+  margin: 25px auto;
+  padding: 40px;
+  border-radius: 8px;
+
+  h2 {
+    font-size: 24px;
+    font-weight: 700;
+    color: #444;
+    margin: 0 0 25px;
+    text-align: center;
+  }
+  form {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+}

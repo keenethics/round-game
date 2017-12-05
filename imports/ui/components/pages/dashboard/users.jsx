@@ -6,13 +6,19 @@ import { reverse } from 'lodash';
 import nanoid from 'nanoid';
 import store from 'store';
 
+import Modal from '/imports/ui/layout/modal';
+import Rating from '/imports/ui/containers/modals/rating';
+
 export default class Users extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
       position: 0,
+      modalIsOpen: false,
     };
+
+    this.toggleModal = this.toggleModal.bind(this);
   }
   componentWillMount() {
     const fetchDate = store.get('Meteor.fetchPositionDate');
@@ -33,16 +39,23 @@ export default class Users extends React.Component {
       });
     }
   }
+  toggleModal(e) {
+    e.preventDefault();
+
+    this.setState({
+      modalIsOpen: !this.state.modalIsOpen,
+    });
+  }
   render() {
     const { user, opponent, history } = this.props;
-    const { position } = this.state;
+    const { position, modalIsOpen } = this.state;
 
     return (
       <div className="dashboard-users">
         <div className="user">
           <div className="avatar">
             {user.username.charAt(0)}
-            <a href="/">{position || 0}</a>
+            <a href="/" onClick={this.toggleModal}>{position || 0}</a>
           </div>
           <div className="username">{user.username}</div>
         </div>
@@ -81,6 +94,9 @@ export default class Users extends React.Component {
             ]}
           </div>
         </div>
+        <Modal isOpen={modalIsOpen} onClose={this.toggleModal}>
+          <Rating position={position} />
+        </Modal>
       </div>
     );
   }

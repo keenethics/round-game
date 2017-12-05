@@ -4,3 +4,29 @@
   padding: 0 10px;
   box-sizing: border-box;
 }
+.rating-item {
+  overflow: hidden;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+
+  .position {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(112, 118, 246, .1);
+    border: 1px solid #cfcff6;
+    color: #cfcff6;
+    float: left;
+    margin: 4px 10px 0 0;
+  }
+  .username {
+    color: #222;
+  }
+  .points {
+    color: #bbb;
+    font-size: 12px;
+    margin: 2px 0 0;
+  }
+}
+.rating-separate {
+  margin: 10px 0;
+}
