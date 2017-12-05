@@ -4,53 +4,87 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { reverse } from 'lodash';
 import nanoid from 'nanoid';
+import store from 'store';
 
-const Users = ({ user, opponent, history }) => (
-  <div className="dashboard-users">
-    <div className="user">
-      <div className="avatar">
-        {user.username.charAt(0)}
-        <span>{user.points || 0}</span>
+export default class Users extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      position: 0,
+    };
+  }
+  componentWillMount() {
+    const fetchDate = store.get('Meteor.fetchPositionDate');
+
+    if (!fetchDate || Math.floor((new Date().getTime() - fetchDate) / 1000) > 18000) {
+      Meteor.call('user.position', {}, (err, res) => {
+        if (err) throw new Meteor.Error('Users', 'user.position');
+
+        this.setState({
+          position: res + 1,
+        });
+        store.set('Meteor.fetchPositionDate', new Date().getTime());
+        store.set('Meteor.userPosition', res);
+      });
+    } else {
+      this.setState({
+        position: store.get('Meteor.userPosition') + 1,
+      });
+    }
+  }
+  render() {
+    const { user, opponent, history } = this.props;
+    const { position } = this.state;
+
+    return (
+      <div className="dashboard-users">
+        <div className="user">
+          <div className="avatar">
+            {user.username.charAt(0)}
+            <a href="/">{position || 0}</a>
+          </div>
+          <div className="username">{user.username}</div>
+        </div>
+        <div className="opponent">
+          {opponent && [
+            <div className="avatar" key="avatar">
+              {opponent.username.charAt(0)}
+            </div>,
+            <div className="username" key="username">{opponent.username}</div>,
+          ]}
+        </div>
+        <div className="versus">
+          <div className="round">
+            {history.winners && history.winners.map((w) => {
+              if (w && w === Meteor.userId()) return <span key={nanoid()} className="point win" />;
+              if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point lose" />;
+
+              return <span key={nanoid()} className="point" />;
+            })}
+            {history.winners ? '' : [
+              <span key={nanoid()} className="point" />,
+              <span key={nanoid()} className="point" />,
+              <span key={nanoid()} className="point" />,
+            ]}
+            <span className="label">vs</span>
+            {history.winners && reverse(history.winners).map((w) => {
+              if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point win" />;
+              if (w && w === Meteor.userId()) return <span key={nanoid()} className="point lose" />;
+
+              return <span key={nanoid()} className="point" />;
+            })}
+            {history.winners ? '' : [
+              <span key={nanoid()} className="point" />,
+              <span key={nanoid()} className="point" />,
+              <span key={nanoid()} className="point" />,
+            ]}
+          </div>
+        </div>
       </div>
-      <div className="username">{user.username}</div>
-    </div>
-    <div className="opponent">
-      {opponent && [
-        <div className="avatar" key="avatar">
-          {opponent.username.charAt(0)}
-        </div>,
-        <div className="username" key="username">{opponent.username}</div>,
-      ]}
-    </div>
-    <div className="versus">
-      <div className="round">
-        {history.winners && history.winners.map((w) => {
-          if (w && w === Meteor.userId()) return <span key={nanoid()} className="point win" />;
-          if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point lose" />;
-
-          return <span key={nanoid()} className="point" />;
-        })}
-        {history.winners ? '' : [
-          <span key={nanoid()} className="point" />,
-          <span key={nanoid()} className="point" />,
-          <span key={nanoid()} className="point" />,
-        ]}
-        <span className="label">vs</span>
-        {history.winners && reverse(history.winners).map((w) => {
-          if (w && w !== Meteor.userId()) return <span key={nanoid()} className="point win" />;
-          if (w && w === Meteor.userId()) return <span key={nanoid()} className="point lose" />;
-
-          return <span key={nanoid()} className="point" />;
-        })}
-        {history.winners ? '' : [
-          <span key={nanoid()} className="point" />,
-          <span key={nanoid()} className="point" />,
-          <span key={nanoid()} className="point" />,
-        ]}
-      </div>
-    </div>
-  </div>
-);
+    );
+  }
+}
 
 Users.propTypes = {
   user: PropTypes.object,
@@ -62,5 +96,3 @@ Users.defaultProps = {
   opponent: null,
   history: {},
 };
-
-export default Users;

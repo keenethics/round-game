@@ -37,20 +37,22 @@
       color: #fff;
       background: #fed571;
       box-sizing: border-box;
-      padding: 16px 0;
+      padding: 18px 0;
 
-      span {
+      a {
         position: absolute;
         left: 50px;
-        top: 18px;
-        background: #efefef;
+        top: 19px;
+        background: #efefef url('/star.svg') no-repeat 2px center;
+        background-size: 12px 12px;
         border: 2px solid #fff;
         box-shadow: 0 1px 2px rgba(0, 0, 0, .1);
-        padding: 4px;
+        padding: 4px 4px 3px 15px;
         border-radius: 10px;
         text-align: center;
-        color: #bababa;
+        color: #aaa;
         font-size: 12px;
+        text-decoration: none;
       }
 
       .dashboard-game & {
@@ -59,7 +61,7 @@
         font-size: 20px;
         padding: 8px 0;
 
-        span {
+        a {
           display: none;
         }
       }
@@ -91,10 +93,11 @@
   .user {
     left: 50%;
     margin-left: -45px;
-    z-index: 100;
+    z-index: 900;
     transition: all .6s;
 
     .dashboard-game & {
+      z-index: 100;
       margin-left: 0;
       left: 0;
     }

@@ -80,6 +80,20 @@ export const cancelSearch = new ValidatedMethod({
   },
 });
 
+export const getUserPosition = new ValidatedMethod({
+  name: 'user.position',
+  validate: null,
+  run() {
+    if (!this.userId) {
+      throw new Meteor.Error('user.cancelSearch', 'Must be logged in to cancel search');
+    }
+
+    const users = Users.findOne(this.userId);
+
+    return Users.find({ username: { $ne: 'bot' }, points: { $gt: users.points } }).count();
+  },
+});
+
 export const resetAll = new ValidatedMethod({
   name: 'users.resetAll',
   validate: null,
